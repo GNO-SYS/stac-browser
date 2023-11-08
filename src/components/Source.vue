@@ -27,6 +27,14 @@
           <b-icon-exclamation-triangle v-if="supportsLanguageExt && (!l.ui || !l.data)" :title="l.ui ? $t('source.language.onlyUI') : $t('source.language.onlyData')" class="ml-2" />
         </b-dropdown-item>
       </b-dropdown>
+
+      <b-button v-if="isAuthenticated" @click="$router.push('login')" size="sm" variant="outline-primary" id="popover-login-btn">
+        <b-icon-share /> <span class="button-label">{{ getUsername }}</span>
+      </b-button>
+      <b-button v-else @click="$router.push('login')" size="sm" variant="outline-primary" id="popover-login-btn">
+        <b-icon-share /> <span class="button-label">Login</span>
+      </b-button>
+
     </b-button-group>
 
     <b-popover
@@ -88,6 +96,8 @@ import URI from 'urijs';
 import Utils from '../utils';
 import { getBest, prepareSupported } from '../locale-id';
 import CopyButton from './CopyButton.vue';
+
+import { IS_USER_AUTHENTICATED, GET_USERNAME } from "../store/storeconstants";
 
 const LANGUAGE_EXT = 'https://stac-extensions.github.io/language/v1.*/schema.json';
 
@@ -231,6 +241,12 @@ export default {
       }
       
       return languages.sort((a,b) => a.global.localeCompare(b.global, this.uiLanguage));
+    },
+    isAuthenticated() {
+      return this.$store.getters[`auth/${IS_USER_AUTHENTICATED}`]
+    },
+    getUsername() {
+      return this.$store.getters[`auth/${GET_USERNAME}`]
     }
   },
   methods: {

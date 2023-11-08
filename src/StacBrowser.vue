@@ -65,7 +65,7 @@ const router = new VueRouter({
   mode: CONFIG.historyMode,
   base: CONFIG.pathPrefix,
   routes: getRoutes(CONFIG)
-});
+}); //< Why...
 
 // Setup store
 Vue.use(Vuex);

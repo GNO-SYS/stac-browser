@@ -1,4 +1,5 @@
 module.exports = {
+    authUrl: 'https://haystac.gno-sys.com/auth/login',
     catalogUrl: null,
     catalogTitle: "STAC Browser",
     allowExternalAccess: true, // Must be true if catalogUrl is not given

@@ -13,6 +13,8 @@ import { addQueryIfNotExists, isAuthenticationError, Loading, processSTAC, proxy
 import { getBest } from '../locale-id';
 import { TYPES } from "../components/ApiCapabilitiesMixin";
 
+import authStoreModule from './auth/index'
+
 function getStore(config, router) {
   // Local settings (e.g. for currently loaded STAC entity)
   const localDefaults = () => ({
@@ -970,6 +972,9 @@ function getStore(config, router) {
         }
       }
     },
+    modules: {
+      authStoreModule
+    }
   });
 }
 
