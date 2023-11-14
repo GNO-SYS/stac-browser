@@ -1,9 +1,13 @@
 import config from '../../config'
 import { SET_AUTHENTICATION, SET_USERNAME, SET_AUTHDATA } from "../store/storeconstants";
+import { IS_USER_AUTHENTICATED, GET_AUTHDATA, GET_USERNAME } from '../store/storeconstants';
 
 export const userService = {
     login,
-    logout
+    logout,
+    isAuthenticated,
+    getAccessToken,
+    getUserName
 }
 
 async function login(username, password) {
@@ -53,4 +57,27 @@ function handleResponse(response) {
 
         return data;
     });
+}
+
+function getAuthData() {
+    return {
+        username: getUserName(),
+        token: getAccessToken(),
+    }
+
+
+    let authState = isAuthenticated();
+    let authData = getAccessToken();
+}
+
+function isAuthenticated() {
+    return this.$store.getters[`auth/${IS_USER_AUTHENTICATED}`]
+}
+
+function getAccessToken() {
+    return this.$store.getters[`auth/${GET_AUTHDATA}`]
+}
+
+function getUserName() {
+    return this.$store.getters[`auth/${GET_USERNAME}`]
 }

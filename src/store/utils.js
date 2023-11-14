@@ -1,6 +1,8 @@
 import axios from "axios";
 import URI from "urijs";
+
 import Utils from "../utils";
+import { userService } from '../services';
 
 export class Loading {
 
@@ -13,11 +15,13 @@ export class Loading {
 
 export async function stacRequest(cx, link) {
   let opts;
-  
-  let user = JSON.parse(localStorage.getItem('user'));
+
+  let authState = userService.isAuthenticated();
+  let authToken = userService.getAccessToken();
+
   let headers = {
     'Accept-Language': cx.getters.acceptedLanguages,
-    ...(user && user.authdata) && { 'Authorization': 'Bearer' + user.authdata}
+    ...(authState && authToken) && { 'Authorization': 'Bearer ' + authToken}
   };
 
   if (Utils.isObject(link)) {
