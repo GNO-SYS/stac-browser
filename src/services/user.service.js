@@ -34,6 +34,12 @@ function logout() {
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+
+        console.group("Auth result");
+        console.log(text);
+        console.log(data);
+        console.groupEnd();
+
         if (!response.ok) {
             if (response.status === 401) {
                 //< Automatically logout if 401 response returned from the API

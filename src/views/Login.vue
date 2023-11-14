@@ -1,9 +1,5 @@
 <template>
     <div>
-        <div class="alert alert-info">
-            Username: test<br />
-            Password: test
-        </div>
         <h2>Login</h2>
         <form @submit.prevent="handleSubmit">
             <div class="form-group">
@@ -60,7 +56,7 @@ export default {
             this.loading = true;
             userService.login(username, password)
                 .then(
-                    user => router.push(this.returnUrl), //< This won't work given current routing setup
+                    user => this.$router.push(this.returnUrl),
                     error => {
                         this.error = error;
                         this.loading = false;
