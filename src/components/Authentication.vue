@@ -5,7 +5,8 @@
         <b-card-body>
           <p>{{ $t('authentication.description') }}</p>
           <Description v-if="description" :description="description" />
-          <b-form-input class="mb-2 mt-2" type="password" v-model.trim="token" autofocus :required="required" />
+          <b-form-input class="mb-2 mt-2" type="username" v-model.trim="username" autofocus :required="required" />
+          <b-form-input class="mb-2 mt-2" type="password" v-model.trim="password" autofocus :required="required" />
         </b-card-body>
         <b-card-footer>
           <b-button type="submit" variant="primary">{{ $t('submit') }}</b-button>
@@ -20,6 +21,10 @@
 import Description from './Description.vue';
 import { BForm, BFormInput } from 'bootstrap-vue';
 import { mapState } from 'vuex';
+import config from '../../config'
+
+
+import { userService } from '../services';
 
 export default {
   name: 'Authentication',
@@ -30,6 +35,10 @@ export default {
   },
   data() {
     return {
+      username: '',
+      password: '',
+      submitted: false,
+      error: '',
       token: '',
       required: true
     };
@@ -54,9 +63,42 @@ export default {
       this.$store.commit('requestAuth', null);
     },
     async submit() {
-      await this.$store.dispatch('setAuth', this.token);
-      await this.$store.dispatch('retryAfterAuth');
-      this.$store.commit('requestAuth', null);
+      const authResult = await this.login(this.username, this.password);
+      if (authResult) {
+        await this.$store.dispatch('setAuth', this.token);
+        await this.$store.dispatch('retryAfterAuth');
+        this.$store.commit('requestAuth', null);
+      }
+    },
+    async login(username, password) {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+               'username': username,
+               'password': password 
+              })
+        }
+
+        const response = await fetch(`${config.authUrl}`, request);
+        const accessToken = await this.handleResponse(response);
+        //< If login successful - response payload contains access token
+        if (accessToken) {
+          this.token = accessToken;
+          return true;
+        }
+        return false;
+    },
+    handleResponse(response) {
+      return response.text().then(text => {
+
+          if (!response.ok) {
+              const error = (data && data.message) || response.statusText;
+              return Promise.reject(error);
+          }
+
+          return text;
+      });
     }
   }
 };

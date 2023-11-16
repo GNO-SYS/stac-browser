@@ -1,6 +1,4 @@
 import config from '../../config'
-import { SET_AUTHENTICATION, SET_USERNAME, SET_AUTHDATA } from "../store/storeconstants";
-import { IS_USER_AUTHENTICATED, GET_AUTHDATA, GET_USERNAME } from '../store/storeconstants';
 
 export const userService = {
     login,
@@ -21,18 +19,20 @@ async function login(username, password) {
     const token = await handleResponse(response);
     //< If login successful - response payload contains access token
     if (token) {
-        //< Cache the auth state, username, and token in the store
-        this.$store.commit(`auth/${SET_AUTHENTICATION}`, true);
-        this.$store.commit(`auth/${SET_USERNAME}`, username);
-        this.$store.commit(`auth/${SET_AUTHDATA}`, token);
+
+        const user = {
+            name: username,
+            authdata: token 
+        };
+
+        //< Cache current 'stac-user' in local storage
+        localStorage.setItem('stac-user', JSON.stringify(user));
     }
 }
 
 function logout() {
     //< Purge user from local storage to log user out
-    this.$store.commit(`auth/${SET_AUTHENTICATION}`, false);
-    this.$store.commit(`auth/${SET_USERNAME}`, 'Anonymous');
-    this.$store.commit(`auth/${SET_AUTHDATA}`, '');
+    localStorage.removeItem('stac-user');
 }
 
 function handleResponse(response) {
@@ -59,25 +59,28 @@ function handleResponse(response) {
     });
 }
 
-function getAuthData() {
-    return {
-        username: getUserName(),
-        token: getAccessToken(),
-    }
-
-
-    let authState = isAuthenticated();
-    let authData = getAccessToken();
-}
-
 function isAuthenticated() {
-    return this.$store.getters[`auth/${IS_USER_AUTHENTICATED}`]
+    const user = localStorage.getItem('stac-user');
+    if (user && user !== null) {
+        return true;
+    }
+    return false;
 }
 
 function getAccessToken() {
-    return this.$store.getters[`auth/${GET_AUTHDATA}`]
+    const user = localStorage.getItem('stac-user');
+    if (user === null) {
+        return "";
+    }
+
+    return user.authdata;
 }
 
 function getUserName() {
-    return this.$store.getters[`auth/${GET_USERNAME}`]
+    const user = localStorage.getItem('stac-user');
+    if (user === null) {
+        return "Anonymous";
+    }
+
+    return user.name;
 }

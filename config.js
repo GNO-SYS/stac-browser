@@ -1,9 +1,11 @@
 module.exports = {
-    authUrl: 'https://haystac.gno-sys.com/auth/login',
-    catalogUrl: null,
-    catalogTitle: "STAC Browser",
-    allowExternalAccess: true, // Must be true if catalogUrl is not given
-    allowedDomains: [],
+    authUrl: 'https://haystac.gno-sys.com/auth/signin',
+    catalogUrl: 'https://haystac.gno-sys.com/',
+    catalogTitle: "Haystac Browser",
+    allowExternalAccess: false, // Must be true if catalogUrl is not given
+    allowedDomains: [
+        'haystac.gno-sys.com'
+    ],
     detectLocaleFromBrowser: true,
     storeLocale: true,
     locale: "en",
@@ -41,4 +43,10 @@ module.exports = {
     requestQueryParameters: {},
     preprocessSTAC: null,
     authConfig: null
+    // authConfig: {
+    //     type: 'header',
+    //     key: 'Authorization',
+    //     formatter: token => `Bearer ${token}`,
+    //     description: 'Login to retrieve access token from our [Haystac API](https://haystac.gno-sys.com/auth/login)'
+    // }
 };

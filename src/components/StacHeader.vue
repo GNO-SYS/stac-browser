@@ -25,14 +25,21 @@
           <b-button v-if="canSearch" variant="outline-primary" size="sm" :to="searchBrowserLink" :title="$t('search.title')" :pressed="isSearchPage()">
             <b-icon-search /> <span class="button-label prio">{{ $t('search.title') }}</span>
           </b-button>
-          <b-button v-if="authConfig" variant="outline-primary" size="sm" @click="auth" :title="$t('authentication.button.title')">
-            <template v-if="authData">
-              <b-icon-lock /> <span class="button-label">{{ $t('authentication.button.authenticated') }}</span>
-            </template>
-            <template v-else>
-              <b-icon-unlock /> <span class="button-label">{{ $t('authentication.button.authenticate') }}</span>
+
+          <b-button variant="outline-primary" size="sm" @click="showAuthModal = true" :title="$t('authentication.button.title')">
+            <template>
+              <b-icon-person /> <span class="button-label">{{ `User: (${userName}) ` }}</span>
             </template>
           </b-button>
+
+          <Teleport to="body">
+            <!-- use the modal component, pass in the prop -->
+            <LoginModal :show="showAuthModal" @close="showAuthModal = false">
+              <template #header>
+                <h3>custom header</h3>
+              </template>
+            </LoginModal>
+          </Teleport>
         </b-button-group>
       </p>
     </b-col>
@@ -43,22 +50,32 @@
 import { mapState, mapGetters } from 'vuex';
 import Source from './Source.vue';
 import StacLink from './StacLink.vue';
-import { BIconArrow90degUp, BIconBook, BIconFolderSymlink, BIconSearch, BIconLock, BIconUnlock } from "bootstrap-vue";
+import { BIconArrow90degUp, BIconBook, BIconFolderSymlink, BIconSearch, BIconLock, BIconUnlock, BIconPerson } from "bootstrap-vue";
 import STAC from '../models/stac';
 import Utils from '../utils';
 
+import LoginModal from './LoginModal.vue';
+import { userService } from '../services';
+
 export default {
   name: 'StacHeader',
+  data() {
+    return {
+      showAuthModal: false
+    }
+  },
   components: {
     BIconArrow90degUp,
     BIconBook,
     BIconFolderSymlink,
     BIconSearch,
-    BIconLock,
-    BIconUnlock,
+    //BIconLock,
+    //BIconUnlock,
+    BIconPerson,
     StacLink,
-    Source
-  },
+    Source,
+    LoginModal
+},
   computed: {
     ...mapState(['allowSelectCatalog', 'authConfig', 'authData', 'catalogUrl', 'data', 'url', 'title']),
     ...mapGetters(['canSearch', 'root', 'parentLink', 'collectionLink', 'toBrowserPath']),
@@ -121,6 +138,12 @@ export default {
         }
       }
       return this.collectionLink || this.parentLink;
+    },
+    isAuthenticated() {
+      return userService.isAuthenticated();
+    },
+    userName() {
+      return userService.getUserName();
     }
   },
   methods: {

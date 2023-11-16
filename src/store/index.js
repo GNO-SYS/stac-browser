@@ -13,8 +13,6 @@ import { addQueryIfNotExists, isAuthenticationError, Loading, processSTAC, proxy
 import { getBest } from '../locale-id';
 import { TYPES } from "../components/ApiCapabilitiesMixin";
 
-import authStoreModule from './auth/index'
-
 function getStore(config, router) {
   // Local settings (e.g. for currently loaded STAC entity)
   const localDefaults = () => ({
@@ -59,7 +57,10 @@ function getStore(config, router) {
       database: {}, // STAC object, Error object or Loading object or Promise (when loading)
       allowSelectCatalog: !config.catalogUrl,
       globalRequestQueryParameters: config.requestQueryParameters,
-      uiLanguage: config.locale
+      uiLanguage: config.locale,
+      authenticated: false,
+      accessToken: "",
+      username: ""
     }),
     getters: {
       loading: state => !state.url || !state.data || state.database[state.url] instanceof Loading,
@@ -971,9 +972,6 @@ function getStore(config, router) {
           cx.commit('valid', error);
         }
       }
-    },
-    modules: {
-      authStoreModule
     }
   });
 }
