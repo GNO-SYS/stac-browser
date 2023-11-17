@@ -27,7 +27,11 @@ async function login(username, password) {
 
         //< Cache current 'stac-user' in local storage
         localStorage.setItem('stac-user', JSON.stringify(user));
+
+        return true;
     }
+    
+    return Promise.reject("Failed to authenticate with remote server");
 }
 
 function logout() {
@@ -37,30 +41,21 @@ function logout() {
 
 function handleResponse(response) {
     return response.text().then(text => {
-        const data = text && JSON.parse(text);
 
         console.group("Auth result");
         console.log(text);
-        console.log(data);
         console.groupEnd();
 
         if (!response.ok) {
-            if (response.status === 401) {
-                //< Automatically logout if 401 response returned from the API
-                logout();
-                location.reload(true);
-            }
-
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-
-        return data;
+        return text;
     });
 }
 
 function isAuthenticated() {
-    const user = localStorage.getItem('stac-user');
+    const user = JSON.parse(localStorage.getItem('stac-user'));
     if (user && user !== null) {
         return true;
     }
@@ -68,7 +63,7 @@ function isAuthenticated() {
 }
 
 function getAccessToken() {
-    const user = localStorage.getItem('stac-user');
+    const user = JSON.parse(localStorage.getItem('stac-user'));
     if (user === null) {
         return "";
     }
@@ -77,7 +72,7 @@ function getAccessToken() {
 }
 
 function getUserName() {
-    const user = localStorage.getItem('stac-user');
+    const user = JSON.parse(localStorage.getItem('stac-user'));
     if (user === null) {
         return "Anonymous";
     }

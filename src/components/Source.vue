@@ -125,7 +125,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['authenticated', 'username', 'conformsTo', 'dataLanguages', 'locale', 'privateQueryParameters', 'supportedLocales', 'stacLint', 'stacProxyUrl', 'uiLanguage', 'valid']),
+    ...mapState(['conformsTo', 'dataLanguages', 'locale', 'privateQueryParameters', 'supportedLocales', 'stacLint', 'stacProxyUrl', 'uiLanguage', 'valid']),
     ...mapGetters(['supportsExtension', 'root']),
     stacVersion() {
       return this.stac?.stac_version;

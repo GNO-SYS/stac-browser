@@ -57,10 +57,7 @@ function getStore(config, router) {
       database: {}, // STAC object, Error object or Loading object or Promise (when loading)
       allowSelectCatalog: !config.catalogUrl,
       globalRequestQueryParameters: config.requestQueryParameters,
-      uiLanguage: config.locale,
-      authenticated: false,
-      accessToken: "",
-      username: ""
+      uiLanguage: config.locale
     }),
     getters: {
       loading: state => !state.url || !state.data || state.database[state.url] instanceof Loading,

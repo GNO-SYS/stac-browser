@@ -1,5 +1,4 @@
-import Browse from '../views/Browse.vue';
-import Login from '../views/Login.vue';
+import Browse from '../views/Browse.vue'
 
 function getRoutes(config) {
   let routes = [];
@@ -41,12 +40,6 @@ function getRoutes(config) {
       component: () => import("../views/Search.vue")
     });
   }
-
-  routes.push({
-    path: "/login",
-    name: "login",
-    component: Login
-  });
 
   routes.push({
     path: "/(.*)",

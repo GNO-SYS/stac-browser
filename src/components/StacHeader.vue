@@ -28,19 +28,16 @@
 
           <b-button variant="outline-primary" size="sm" @click="showAuthModal = true" :title="$t('authentication.button.title')">
             <template>
-              <b-icon-person /> <span class="button-label">{{ `User: (${userName}) ` }}</span>
+              <b-icon-person /> <span class="button-label">{{ `User: ${userName}` }}</span>
             </template>
           </b-button>
 
           <Teleport to="body">
-            <!-- use the modal component, pass in the prop -->
-            <LoginModal :show="showAuthModal" @close="showAuthModal = false">
-              <template #header>
-                <h3>custom header</h3>
-              </template>
+            <LoginModal :show="showAuthModal" 
+              @close="closeAuthModal">
             </LoginModal>
           </Teleport>
-        </b-button-group>
+        </b-button-group> 
       </p>
     </b-col>
   </b-row>
@@ -157,6 +154,10 @@ export default {
         show: true,
         force: true
       }));
+    },
+    closeAuthModal() {
+      this.showAuthModal = false;
+      this.$router.go(0);
     }
   }
 };
