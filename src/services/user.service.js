@@ -41,11 +41,6 @@ function logout() {
 
 function handleResponse(response) {
     return response.text().then(text => {
-
-        console.group("Auth result");
-        console.log(text);
-        console.groupEnd();
-
         if (!response.ok) {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
