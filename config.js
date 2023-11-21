@@ -2,7 +2,7 @@ module.exports = {
     authUrl: 'https://haystac.gno-sys.com/auth/signin',
     catalogUrl: 'https://haystac.gno-sys.com/',
     catalogTitle: "Haystac Browser",
-    allowExternalAccess: false, // Must be true if catalogUrl is not given
+    allowExternalAccess: true, // Must be true if catalogUrl is not given
     allowedDomains: [
         'haystac.gno-sys.com'
     ],
